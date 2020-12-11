@@ -9,20 +9,25 @@ def count_one_and_three_jolt_steps(arrangement: np.array):
 	return np.sum(diffs == 1), np.sum(diffs == 3)
 
 
-def count_chains_reaching_max(arrangement: np.array):
+def count_chains_reaching_max(arrangement: np.array, known_values: dict):
 	if len(arrangement) == 1:
 		return 1
 
 	num_arrangements = 0
 	min_val = arrangement.min()
+	if min_val in known_values:
+		return known_values[min_val]
+
 	if len(arrangement) > 1 and arrangement[1] <= min_val + 3:
-		num_arrangements += count_chains_reaching_max(arrangement[1:])
+		num_arrangements += count_chains_reaching_max(arrangement[1:], known_values)
 
 	if len(arrangement) > 2 and arrangement[2] <= min_val + 3:
-		num_arrangements += count_chains_reaching_max(arrangement[2:])
+		num_arrangements += count_chains_reaching_max(arrangement[2:], known_values)
 
 	if len(arrangement) > 3 and arrangement[3] <= min_val + 3:
-		num_arrangements += count_chains_reaching_max(arrangement[3:])
+		num_arrangements += count_chains_reaching_max(arrangement[3:], known_values)
+
+	known_values[min_val] = num_arrangements
 
 	return num_arrangements
 
@@ -42,7 +47,8 @@ def get_subchains(arrangement: np.array):
 def split_and_count_chains_reaching_max(arrangement: np.array):
 	num_arrangements = 1
 	for subchain in get_subchains(arrangement):
-		num_arrangements *= count_chains_reaching_max(subchain)
+		known_values = dict()
+		num_arrangements *= count_chains_reaching_max(subchain, known_values)
 
 	return num_arrangements
 
