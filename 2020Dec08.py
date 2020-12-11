@@ -60,13 +60,13 @@ def traverse_instruction_list(instructions: tuple):
 		node.traversed = True
 		last_node = node
 
+	# Traversal is a success if we reach end of the list without hitting an infinite loop
 	success = idx >= len(instructions) and last_node.idx == len(instructions) - 1
 
 	return success, last_node, accumulator
 
 
 def modify_instruction_list(instructions: tuple):
-
 	for i in range(len(instructions)):
 		node = instructions[i]
 		orig_op = node.op
@@ -93,10 +93,7 @@ def modify_instruction_list(instructions: tuple):
 
 if __name__ == '__main__':
 	instruction_list = load_all_instructions(test=False)
-	succeeded, last_inst, final_accumulator = traverse_instruction_list(instruction_list)
-	test_succeeded, modified, test_accumulator = modify_instruction_list(instruction_list)
-	pass
-	# my_bag = all_bags[my_bag_color]
-	# bags_inside = count_bags_inside(my_bag)
-	# print(F'A {my_bag_color} may be inside {len(my_bag.contained_in)} different color bags.')
-	# print(F'There are {bags_inside} bags inside my {my_bag_color} bag.')
+	succeeded, last_inst, final_acc = traverse_instruction_list(instruction_list)
+	print(F'Initial traverser hit infitine loop on instruction {last_inst.idx}. Accumulator was at {final_acc}.')
+	test_succeeded, modified, test_acc = modify_instruction_list(instruction_list)
+	print(F'Modifying instruction {last_inst.idx} allowed program to complete. Accumulator was at {test_acc}.')
